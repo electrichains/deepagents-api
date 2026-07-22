@@ -1,10 +1,10 @@
 services:
   - type: web
-    name: deepagents-api
+    name: deepagent-server
     runtime: docker
     plan: free
     dockerfilePath: ./Dockerfile
-    dockerContext: .
+    dockerContext: ./langgraph-server
     healthCheckPath: /health
     envVars:
       - key: OPENAI_API_KEY
@@ -13,3 +13,16 @@ services:
         value: https://openrouter.ai/api/v1
       - key: DEEPAGENTS_MODEL
         value: openai:openai/gpt-4o
+      - key: LANGGRAPH_SERVER_PORT
+        value: "10000"
+
+  - type: web
+    name: deepagents-ui
+    runtime: node
+    plan: free
+    buildCommand: yarn install && yarn build
+    startCommand: yarn start
+    rootDir: ui
+    envVars:
+      - key: NODE_VERSION
+        value: "20"

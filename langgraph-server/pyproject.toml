@@ -1,0 +1,14 @@
+[project]
+name = "deepagent-server"
+version = "0.1.0"
+requires-python = ">=3.11,<4.0"
+dependencies = [
+    "deepagents",
+    "langchain-openai",
+    "langchain-anthropic",
+    "langgraph-cli[inmem]>=0.4.30",
+]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
