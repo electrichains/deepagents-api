@@ -3,6 +3,8 @@ from contextlib import asynccontextmanager
 from typing import Any
 
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from langchain_core.messages import AIMessage, HumanMessage
 from pydantic import BaseModel
 
@@ -44,6 +46,13 @@ app = FastAPI(
     version="0.1.0",
     lifespan=lifespan,
 )
+
+app.mount("/static", StaticFiles(directory="server/static"), name="static")
+
+
+@app.get("/")
+async def root():
+    return FileResponse("server/static/index.html")
 
 
 @app.get("/health")
