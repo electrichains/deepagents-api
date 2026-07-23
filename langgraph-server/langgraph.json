@@ -3,5 +3,4 @@
   "graphs": {
     "deep_agent": "./graph.py:agent"
   },
-  "env": ".env"
 }
