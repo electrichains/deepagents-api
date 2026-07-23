@@ -6,18 +6,7 @@ RUN for dep in /deps/*; do             echo "Installing $dep";             if [ 
 
 ENV LANGSERVE_GRAPHS='{"deep_agent": "/deps/langgraph-server/graph.py:agent"}'
 
-RUN python3 -c "
-import os
-for pkg in ['langgraph_api', 'langgraph_runtime', 'langgraph_license']:
-    path = f'/api/{pkg}'
-    os.makedirs(path, exist_ok=True)
-    init = os.path.join(path, '__init__.py')
-    with open(init, 'w') as f:
-        if pkg == 'langgraph_license':
-            f.write('from . import validation as _v\n_v.check_langsmith_access = lambda: (True, {})\n_v.get_license_status = lambda: (True, {})\n')
-        else:
-            f.write('')
-"
+RUN printf 'from . import validation as _v\n_v.check_langsmith_access = lambda: (True, {})\n_v.get_license_status = lambda: (True, {})\n' > /api/langgraph_license/__init__.py && touch /api/langgraph_api/__init__.py /api/langgraph_runtime/__init__.py
 RUN PYTHONDONTWRITEBYTECODE=1 uv pip install --system --no-cache-dir --no-deps -e /api
 
 RUN pip uninstall -y pip setuptools wheel
