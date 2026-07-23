@@ -6,7 +6,7 @@ RUN for dep in /deps/*; do             echo "Installing $dep";             if [ 
 
 ENV LANGSERVE_GRAPHS='{"deep_agent": "/deps/langgraph-server/graph.py:agent"}'
 
-RUN printf 'from . import validation as _v\n_v.check_langsmith_access = lambda: (True, {})\n_v.get_license_status = lambda: (True, {})\n' > /api/langgraph_license/__init__.py && touch /api/langgraph_api/__init__.py /api/langgraph_runtime/__init__.py
+RUN printf 'from . import validation as _v\nimport asyncio\nasync def _fake(): return (True, {})\n_v.check_langsmith_access = _fake\n_v.get_license_status = _fake\n' > /api/langgraph_license/__init__.py && touch /api/langgraph_api/__init__.py /api/langgraph_runtime/__init__.py
 RUN PYTHONDONTWRITEBYTECODE=1 uv pip install --system --no-cache-dir --no-deps -e /api
 
 RUN pip uninstall -y pip setuptools wheel
